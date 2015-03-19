@@ -85,8 +85,28 @@ CompareProperties.prototype = {
 
 		self._readFiles();
 		self._findChanges();
+		self._findRemoved();
 
 		return this;
+	},
+
+	_findRemoved: function () {
+
+		var self = this;
+
+		self._for(self._keysCompare, function (index) {
+
+			var key = this,
+				value = self._valuesCompare[index];
+
+			if (!self._inArray(key, self._keysMaster)) {
+				self._changes.removed.push({
+					key: key,
+					value: value
+				});
+			}
+		});
+
 	},
 
 	_findChanges: function () {
