@@ -35,7 +35,7 @@ module.exports = function (grunt) {
 					fileMaster: 'resources/i18n_master.properties',
 					fileCompare: 'resources/i18n_compare.properties',
 					fileDiff: 'resource/i18n_diff.properties',
-					ignoreValues: true
+					showChanged: false
 				}
 			}
 		},

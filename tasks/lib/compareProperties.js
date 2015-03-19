@@ -91,10 +91,27 @@ CompareProperties.prototype = {
 
 	_findChanges: function () {
 
-		var self = this,
-			options = self.options;
+		var self = this;
 
-		
+		self._for(self._keysMaster, function (index) {
+
+			var key = this,
+				value = self._valuesMaster[index];
+
+			if (self._inArray(key, self._keysCompare)) {
+				self._changes.changed.push({
+					key: key,
+					value: value,
+					compareValue: self._valuesCompare[index]
+				});
+			} else {
+				self._changes.added.push({
+					key: key,
+					value: value
+				});
+			}
+		});
+
 	},
 
 	_readFiles: function () {
@@ -207,6 +224,23 @@ CompareProperties.prototype = {
 		self.grunt.file.write(path, value);
 	},
 
+	_inArray: function (value, array) {
+
+		var isInArray = false,
+			i = 0,
+			len = array.length
+		;
+
+		for (i; i < len; i += 1) {
+			if (array[i] === value) {
+				isInArray = true;
+				break;
+			}
+		}
+
+		return isInArray;
+	},
+
 	_log: function (value) {
 		var self = this;
 		self.grunt.log.writeln(value);
@@ -221,6 +255,6 @@ CompareProperties.prototype = {
 			callback.call(array[i], i);
 		}
 
-	},
+	}
 
 };

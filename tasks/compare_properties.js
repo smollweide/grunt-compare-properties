@@ -18,7 +18,9 @@ module.exports = function (grunt) {
 	grunt.registerMultiTask('compare_properties', 'A grunt plugin to compare two property files and find changes which has been made.', function () {
 		// Merge task-specific and/or target-specific options with these defaults.
 		var options = this.options({
-			ignoreValues: false
+			showChanged: true,
+			showAdded: true,
+			showRemoved: true
 		});
 
 		compareProperties.run({
