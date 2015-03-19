@@ -61,6 +61,17 @@ CompareProperties.prototype = {
 
 		self.grunt = options.grunt;
 		self.options = options.options;
+		self._fileMaster = '';
+		self._fileCompare = '';
+		self._keysMaster = [];
+		self._valuesMaster = [];
+		self._keysCompare = [];
+		self._valuesCompare = [];
+		self._changes = {
+			changed: [],
+			added: [],
+			removed: []
+		};
 
 		self._log('');
 
@@ -72,7 +83,71 @@ CompareProperties.prototype = {
 			return this;
 		}
 
+		self._readFiles();
+		self._findChanges();
+
 		return this;
+	},
+
+	_findChanges: function () {
+
+		var self = this,
+			options = self.options;
+
+		
+	},
+
+	_readFiles: function () {
+
+		var self = this,
+			options = self.options,
+			arraysFileMaster,
+			arraysFileCompare;
+
+		self._fileMaster = self._fileRead(options.fileMaster);
+		self._fileCompare = self._fileRead(options.fileCompare);
+
+		arraysFileMaster = self._getFileArray(self._fileMaster);
+		self._keysMaster = arraysFileMaster.keys;
+		self._valuesMaster = arraysFileMaster.values;
+
+		arraysFileCompare = self._getFileArray(self._fileCompare);
+		self._keysCompare = arraysFileCompare.keys;
+		self._valuesCompare = arraysFileCompare.values;
+
+	},
+
+	_getFileArray: function (fileData) {
+
+		var self = this,
+			fileObject = {
+				keys: [],
+				values: []
+			},
+			fileDataArray,
+			fileDataClean = self._cleanFile(fileData);
+
+		fileDataArray = fileDataClean.split('\n');
+
+		self._for(fileDataArray, function () {
+			var keyVal = this.split('=');
+
+			fileObject.keys.push(keyVal[0]);
+			fileObject.values.push(keyVal[1]);
+		});
+
+		return fileObject;
+	},
+
+	_cleanFile: function (fileData) {
+
+		return fileData
+			.replace(/\t/g, '')
+			.replace(/^ /gm, '')
+			.replace(/#.*/gm, '')
+			.replace(/[ ]{0,1}=[ ]{0,1}/g, '=')
+			.replace(/^\n/gm, '');
+
 	},
 
 	_areFilesValid: function () {
@@ -135,6 +210,17 @@ CompareProperties.prototype = {
 	_log: function (value) {
 		var self = this;
 		self.grunt.log.writeln(value);
-	}
+	},
+
+	_for: function (array, callback) {
+		var i = 0,
+			len = array.length
+			;
+
+		for (i; i < len; i += 1) {
+			callback.call(array[i], i);
+		}
+
+	},
 
 };
