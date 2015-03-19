@@ -86,8 +86,78 @@ CompareProperties.prototype = {
 		self._readFiles();
 		self._findChanges();
 		self._findRemoved();
+		self._writeResults();
 
 		return this;
+	},
+
+	_writeResults: function () {
+
+		var self = this,
+			options = self.options,
+			outputChangedFrom = '',
+			outputChangedTo = '',
+			outputAdded = '',
+			outputRemoved = '',
+			output,
+			counter = 0;
+
+		if (options.showChanged) {
+
+			outputChangedFrom += '\n';
+			outputChangedFrom += '###########################\n';
+			outputChangedFrom += '# CHANGED FROM            #\n';
+			outputChangedFrom += '###########################\n';
+
+			outputChangedTo += '\n';
+			outputChangedTo += '###########################\n';
+			outputChangedTo += '# CHANGED TO              #\n';
+			outputChangedTo += '###########################\n';
+
+			self._for(self._changes.changed, function () {
+				var item = this;
+				counter += 1;
+				outputChangedFrom += item.key + ' = ' + item.value + '\n';
+				outputChangedTo += item.key + ' = ' + item.compareValue + ' \n';
+			});
+
+		}
+
+		if (options.showAdded) {
+
+			outputAdded += '\n';
+			outputAdded += '###########################\n';
+			outputAdded += '# ADDED                   #\n';
+			outputAdded += '###########################\n';
+
+			self._for(self._changes.added, function () {
+				var item = this;
+				counter += 1;
+				outputAdded += item.key + ' = ' + item.value + '\n';
+			});
+
+		}
+
+		if (options.showRemoved) {
+
+			outputRemoved += '\n';
+			outputRemoved += '###########################\n';
+			outputRemoved += '# REMOVED                 #\n';
+			outputRemoved += '###########################\n';
+
+			self._for(self._changes.removed, function () {
+				var item = this;
+				counter += 1;
+				outputRemoved += item.key + ' = ' + item.value + '\n';
+			});
+
+		}
+
+		output = outputRemoved + outputAdded + outputChangedFrom + outputChangedTo;
+
+		self._log('found ' + counter + ' changes');
+		self._fileWrite(options.fileDiff, output);
+		self._log('file "' + options.fileDiff + '" written');
 	},
 
 	_findRemoved: function () {
@@ -119,11 +189,13 @@ CompareProperties.prototype = {
 				value = self._valuesMaster[index];
 
 			if (self._inArray(key, self._keysCompare)) {
-				self._changes.changed.push({
-					key: key,
-					value: value,
-					compareValue: self._valuesCompare[index]
-				});
+				if (value !== self._valuesCompare[index]) {
+					self._changes.changed.push({
+						key: key,
+						value: value,
+						compareValue: self._valuesCompare[index]
+					});
+				}
 			} else {
 				self._changes.added.push({
 					key: key,
