@@ -96,7 +96,6 @@ CompareProperties.prototype = {
 		var self = this,
 			options = self.options,
 			outputChangedFrom = '',
-			outputChangedTo = '',
 			outputAdded = '',
 			outputRemoved = '',
 			output,
@@ -106,19 +105,14 @@ CompareProperties.prototype = {
 
 			outputChangedFrom += '\n';
 			outputChangedFrom += '###########################\n';
-			outputChangedFrom += '# CHANGED FROM            #\n';
+			outputChangedFrom += '# CHANGED            	    #\n';
 			outputChangedFrom += '###########################\n';
-
-			outputChangedTo += '\n';
-			outputChangedTo += '###########################\n';
-			outputChangedTo += '# CHANGED TO              #\n';
-			outputChangedTo += '###########################\n';
 
 			self._for(self._changes.changed, function () {
 				var item = this;
 				counter += 1;
-				outputChangedFrom += item.key + ' = ' + item.value + '\n';
-				outputChangedTo += item.key + ' = ' + item.compareValue + ' \n';
+				outputChangedFrom += '#from: "' + item.value + '" to: "' + item.compareValue + '"\n';
+				outputChangedFrom += item.key + ' = ' + item.compareValue + '\n';
 			});
 
 		}
@@ -153,7 +147,7 @@ CompareProperties.prototype = {
 
 		}
 
-		output = outputRemoved + outputAdded + outputChangedFrom + outputChangedTo;
+		output = outputRemoved + outputAdded + outputChangedFrom;
 
 		self._log('found ' + counter + ' changes');
 		self._fileWrite(options.fileDiff, output);
@@ -169,7 +163,7 @@ CompareProperties.prototype = {
 			var key = this,
 				value = self._valuesCompare[index];
 
-			if (!self._inArray(key, self._keysMaster)) {
+			if (!(self._inArray(key, self._keysMaster) >= 0)) {
 				self._changes.removed.push({
 					key: key,
 					value: value
@@ -186,14 +180,15 @@ CompareProperties.prototype = {
 		self._for(self._keysMaster, function (index) {
 
 			var key = this,
-				value = self._valuesMaster[index];
+				value = self._valuesMaster[index],
+				inArrayNum = self._inArray(key, self._keysCompare);
 
-			if (self._inArray(key, self._keysCompare)) {
-				if (value !== self._valuesCompare[index]) {
+			if (inArrayNum >= 0) {
+				if (value !== self._valuesCompare[inArrayNum]) {
 					self._changes.changed.push({
 						key: key,
 						value: value,
-						compareValue: self._valuesCompare[index]
+						compareValue: self._valuesCompare[inArrayNum]
 					});
 				}
 			} else {
@@ -241,8 +236,11 @@ CompareProperties.prototype = {
 		self._for(fileDataArray, function () {
 			var keyVal = this.split('=');
 
-			fileObject.keys.push(keyVal[0]);
-			fileObject.values.push(keyVal[1]);
+			if (keyVal[0] !== '') {
+				fileObject.keys.push(keyVal[0]);
+				fileObject.values.push(keyVal[1]);
+			}
+
 		});
 
 		return fileObject;
@@ -254,9 +252,8 @@ CompareProperties.prototype = {
 			.replace(/\t/g, '')
 			.replace(/^ /gm, '')
 			.replace(/#.*/gm, '')
-			.replace(/[ ]{0,1}=[ ]{0,1}/g, '=')
+			.replace(/[ |\t]*=[ |\t]*/g, '=')
 			.replace(/^\n/gm, '');
-
 	},
 
 	_areFilesValid: function () {
@@ -318,19 +315,19 @@ CompareProperties.prototype = {
 
 	_inArray: function (value, array) {
 
-		var isInArray = false,
+		var number = -1,
 			i = 0,
 			len = array.length
 		;
 
 		for (i; i < len; i += 1) {
 			if (array[i] === value) {
-				isInArray = true;
+				number = i;
 				break;
 			}
 		}
 
-		return isInArray;
+		return number;
 	},
 
 	_log: function (value) {
