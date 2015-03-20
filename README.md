@@ -25,65 +25,77 @@ In your project's Gruntfile, add a section named `compare_properties` to the dat
 ```js
 grunt.initConfig({
   compare_properties: {
-    options: {
-      // Task-specific options go here.
-    },
-    your_target: {
-      // Target-specific file lists and/or options go here.
-    },
+   	i18n: {
+		options: {
+			fileMaster: 'resources/i18n_master.properties',
+			fileCompare: 'resources/i18n_compare.properties',
+			fileDiff: 'diff/i18n_diff.properties'
+		}
+	}
   },
 });
 ```
 
 ### Options
 
-#### options.separator
+#### options.fileMaster
 Type: `String`
-Default value: `',  '`
 
-A string value that is used to do something with whatever.
+Path to the master file.
 
-#### options.punctuation
+#### options.fileCompare
 Type: `String`
-Default value: `'.'`
 
-A string value that is used to do something else with whatever else.
+Path to the file which you whant to compare.
 
-### Usage Examples
+#### options.fileDiff
+Type: `String`
 
-#### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+Path to the file which should be used to store the changes.
 
-```js
-grunt.initConfig({
-  compare_properties: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
-```
+#### options.showRemoved
+Type: `Boolean`
+Default value: `true`
 
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+Defines whether the remove keys to be written in the "fileDiff" file.
 
-```js
-grunt.initConfig({
-  compare_properties: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
-```
+#### options.showAdded
+Type: `Boolean`
+Default value: `true`
 
-## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
+Defines whether the added keys to be written in the "fileDiff" file.
+
+#### options.showChanged
+Type: `Boolean`
+Default value: `true`
+
+Defines whether the changed values of the keys to be written in the "fileDiff" file.
+
 
 ## Release History
-_(Nothing yet)_
+- 0.1.0 general functionality
+
+License
+=======
+
+Copyright (c) 2015 Simon Mollweide
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
