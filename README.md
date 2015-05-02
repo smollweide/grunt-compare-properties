@@ -71,9 +71,16 @@ Default value: `true`
 
 Defines whether the changed values of the keys to be written in the "fileDiff" file.
 
+#### options.showPotentialErrors
+Type: `Boolean`
+Default value: `true`
+
+Defines whether the potential errors of the key values to be written in the "fileDiff" file.
+
 
 ## Release History
 - 0.1.0 general functionality
+- 0.2.0 potential errors
 
 License
 =======
