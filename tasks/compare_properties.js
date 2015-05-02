@@ -20,7 +20,9 @@ module.exports = function (grunt) {
 		var options = this.options({
 			showChanged: true,
 			showAdded: true,
-			showRemoved: true
+			showRemoved: true,
+			showPotentialErrors: true,
+			isTest: false
 		});
 
 		compareProperties.run({
