@@ -422,7 +422,7 @@ CompareProperties.prototype = {
 	_hasValidTags: function (value) {
 
 		var self = this,
-			tagPattern = /<("[^"]*"|'[^']*'|[^'">])*>/g,
+			tagPattern = /(<([^>]+)>)/ig,
 			tagStartNamePattern = /(<)([a-zA-Z]*)/,
 			tagEndNamePattern = /(<\/)([a-zA-Z]*)/,
 			hasTag = value.search(/<[a-zA-Z]*/g) >= 0,
@@ -444,11 +444,26 @@ CompareProperties.prototype = {
 			tag: tags[0],
 			index: tags.index
 		});
+
+		if (tags[0].search(/\/>/) >= 0) {
+			tagsArray.push({
+				tag: tags[0].replace('/', '').replace('<', '</'),
+				index: tags.index
+			});
+		}
+
 		while((tag = tagPattern.exec(value)) !== null) {
 			tagsArray.push({
 				tag: tag[0],
 				index: tag.index
 			});
+
+			if (tag[0].search(/\/>/) >= 0) {
+				tagsArray.push({
+					tag: tag[0].replace('/', '').replace('<', '</'),
+					index: tag.index
+				});
+			}
 		}
 
 		len = tagsArray.length;
@@ -487,7 +502,8 @@ CompareProperties.prototype = {
 			varPattern = /{(.*?)}/g,
 			vars, _var,
 			validCounter = 0,
-			loopCounter = 1;
+			loopCounter = 0,
+			sumLoopCounter;
 
 		if (!hasVar) {
 			if (value.search(/\}/g) >= 0) {
@@ -504,18 +520,16 @@ CompareProperties.prototype = {
 			return false;
 		}
 
-		if (vars[1] === '0') {
-			validCounter += 1;
-		}
+		validCounter += parseInt(vars[1]);
 
 		while((_var = varPattern.exec(value)) !== null) {
-			if (_var[1] === loopCounter.toString()) {
-				validCounter += 1;
-			}
+			validCounter += parseInt(_var[1]);
 			loopCounter += 1;
 		}
 
-		if (loopCounter !== validCounter) {
+		sumLoopCounter = (Math.pow(loopCounter, 2) + loopCounter) / 2;
+
+		if (sumLoopCounter !== validCounter) {
 			self._log('using wrong parameters in "' + value + '"', 'error');
 			return false;
 		}

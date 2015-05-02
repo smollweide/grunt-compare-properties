@@ -142,6 +142,12 @@ exports.compare_properties = {
 		expectedArray.push(false);
 		stringArray.push('Yes, I <div target="_blank"');
 		expectedArray.push(false);
+		stringArray.push('Dear Mr. {0},<br /> Thank you for Ordering');
+		expectedArray.push(true);
+		stringArray.push('Dear Mr. {0},<br /> Thank you <br /> for Ordering <br />');
+		expectedArray.push(true);
+		stringArray.push('Die Anzahl des Artikels <a href="{3}" style="text-decoration: underline“>{0}</a> im Warenkorb wurde aufgrund fehlenden Lagerbestands von {1} auf {2} verringert.');
+		expectedArray.push(true);
 
 		for (var i = 0; i < stringArray.length; i += 1) {
 			test.equal(
@@ -182,7 +188,7 @@ exports.compare_properties = {
 		stringArray.push('Yes, I {0} Test {1} {2} {3} {4} {5} {6}');
 		expectedArray.push(true);
 		stringArray.push('Yes, I {0} Test {1} {3} {2} {4} {5} {6}');
-		expectedArray.push(false);
+		expectedArray.push(true);
 		stringArray.push('Yes, I {0 Test');
 		expectedArray.push(false);
 		stringArray.push('Yes, I 0} Test');
@@ -196,6 +202,8 @@ exports.compare_properties = {
 		stringArray.push('Yes, I {1} Test');
 		expectedArray.push(false);
 		stringArray.push('Yes, I agree to the');
+		expectedArray.push(true);
+		stringArray.push('{1} ({0})');
 		expectedArray.push(true);
 
 		for (var i = 0; i < stringArray.length; i += 1) {
