@@ -1,7 +1,7 @@
 {
   "name": "grunt-compare-properties",
   "description": "A grunt plugin to compare two property files and find changes which has been made.",
-  "version": "1.0.0",
+  "version": "0.2.1",
   "homepage": "https://github.com/smollweide/grunt-compare-properties",
   "author": {
     "name": "Simon Mollweide",
