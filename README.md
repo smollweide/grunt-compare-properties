@@ -81,6 +81,7 @@ Defines whether the potential errors of the key values to be written in the "fil
 ## Release History
 - 0.1.0 general functionality
 - 0.2.0 potential errors
+- 1.0.0 update to grunt 1.0.4 and 10.16.0 node version
 
 License
 =======
