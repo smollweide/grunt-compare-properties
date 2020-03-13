@@ -1,5 +1,5 @@
 /*
- * grunt-terrific-modules
+ * grunt-compare-properties
  * https://github.com/smollweide/grunt-compare-properties
  *
  * Copyright (c) 2014 Simon Mollweide
